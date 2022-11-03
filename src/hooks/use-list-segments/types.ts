@@ -10,7 +10,7 @@ interface SegmentRule {
 }
 export interface SegmentItem {
   name: string; // 'My Segment',
-  tags: Array<unknown>;
+  tags: Array<string>;
   creationDate: number; // 1611167195896
   key: string; // 'my-segment',
   included: Array<string>; // ['user-1','user-2']
