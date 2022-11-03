@@ -138,13 +138,15 @@ export const SegmentsList = ({ loading, segments }: SegmentsListInterface) => {
             disabled={normalizedPage.isFirstPage}
             onClick={() => setPage(page - 1)}
           />
-          <Text align="right">
-            Showing{' '}
-            <b>
-              {normalizedPage.first}-{normalizedPage.last}
-            </b>{' '}
-            of {normalizedPage.totalSegments} segments
-          </Text>
+          {normalizedPage.totalSegments && (
+            <Text align="right">
+              Showing{' '}
+              <b>
+                {normalizedPage.first}-{normalizedPage.last}
+              </b>{' '}
+              of {normalizedPage.totalSegments} segments
+            </Text>
+          )}
           <IconButton
             aria-label="Next Page"
             icon={<ChevronRightIcon />}

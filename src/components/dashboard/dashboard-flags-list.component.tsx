@@ -186,13 +186,15 @@ export const DashboardFlagsList = ({
             disabled={normalizedPage.isFirstPage}
             onClick={() => setPage(page - 1)}
           />
-          <Text align="right">
-            Showing{' '}
-            <b>
-              {normalizedPage.first}-{normalizedPage.last}
-            </b>{' '}
-            of {normalizedPage.totalFlags} flags
-          </Text>
+          {normalizedPage.totalFlags && (
+            <Text align="right">
+              Showing{' '}
+              <b>
+                {normalizedPage.first}-{normalizedPage.last}
+              </b>{' '}
+              of {normalizedPage.totalFlags} flags
+            </Text>
+          )}
           <IconButton
             aria-label="Next Page"
             icon={<ChevronRightIcon />}
