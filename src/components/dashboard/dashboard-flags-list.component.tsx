@@ -1,4 +1,9 @@
-import { ChevronLeftIcon, ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  QuestionOutlineIcon,
+  SettingsIcon,
+} from '@chakra-ui/icons';
 import {
   Box,
   Center,
@@ -7,8 +12,12 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
   Spinner,
-  Switch,
   Text,
   Tooltip,
   useColorModeValue,
@@ -24,11 +33,15 @@ interface DashboardFlagsListInterface {
   loading: boolean;
   flags: ListFlagsResponse | null;
   refetchFlags: () => Promise<void>;
+  includeArchived: boolean;
+  setIncludeArchived: (includeArchived: boolean) => void;
 }
 export const DashboardFlagsList = ({
   loading,
   flags,
   refetchFlags,
+  includeArchived,
+  setIncludeArchived,
 }: DashboardFlagsListInterface) => {
   const containerBg = useColorModeValue('white', 'gray.900');
   const containerBorderColor = useColorModeValue('gray.200', 'gray.700');
@@ -124,24 +137,48 @@ export const DashboardFlagsList = ({
   return (
     <Box marginTop="4">
       <HStack flex={1} justifyContent="space-between">
-        <Box minW="400" maxW="400" justifyContent={'center'} flex="1">
-          <InputGroup>
-            <Input
-              autoFocus
-              placeholder="Filter flags"
-              value={filter}
-              onChange={onChangeFilter}
-              borderColor="gray.500"
+        <HStack>
+          <Box minW="450" maxW="450" justifyContent={'center'} flex="1">
+            <InputGroup>
+              <Input
+                autoFocus
+                placeholder="Filter flags"
+                value={filter}
+                onChange={onChangeFilter}
+                borderColor="gray.500"
+              />
+              <InputRightElement
+                children={
+                  <Tooltip label="Filter by flag name, description, tag, or segment" fontSize="md">
+                    <QuestionOutlineIcon />
+                  </Tooltip>
+                }
+              />
+            </InputGroup>
+          </Box>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Filter Settings"
+              icon={<SettingsIcon />}
+              marginRight="3"
             />
-            <InputRightElement
-              children={
-                <Tooltip label="Filter by flag name, description, tag, or segment" fontSize="md">
-                  <QuestionOutlineIcon />
-                </Tooltip>
-              }
-            />
-          </InputGroup>
-        </Box>
+            <MenuList>
+              <MenuOptionGroup
+                value={includeArchived ? 'archived' : 'unarchived'}
+                title="Show only"
+                type="radio"
+              >
+                <MenuItemOption value="unarchived" onClick={() => setIncludeArchived(false)}>
+                  Unarchived flags
+                </MenuItemOption>
+                <MenuItemOption value="archived" onClick={() => setIncludeArchived(true)}>
+                  Archived flags
+                </MenuItemOption>
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+        </HStack>
         <HStack>
           <IconButton
             aria-label="Previous Page"
