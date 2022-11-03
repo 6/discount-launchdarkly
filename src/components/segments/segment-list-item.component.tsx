@@ -11,7 +11,6 @@ import {
   MenuItem,
   MenuList,
   Stack,
-  Switch,
   Tag,
   Text,
   Tooltip,
@@ -126,14 +125,14 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
         )}
         {isEmpty ? (
           <Box marginTop="2" flex={1}>
-            Empty segment
+            This is an empty segment (no included/excluded users).
           </Box>
         ) : (
           <></>
         )}
         {included.length ? (
           <Box marginTop="2" flex={1}>
-            Included ({included.length} values):
+            Included ({included.length} users):
             <Tag size="sm" marginRight="1">
               {included[0]}
             </Tag>
@@ -149,7 +148,7 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
         )}
         {excluded.length ? (
           <Box marginTop="2" flex={1}>
-            Excluded ({excluded.length} values):
+            Excluded ({excluded.length} users):
             <Tag size="sm" marginRight="1">
               {excluded[0]}
             </Tag>
@@ -176,10 +175,10 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
               ) : (
                 <>
                   {included.length > 0 && (
-                    <MenuItem onClick={openSegmentIncluded}>View all included values</MenuItem>
+                    <MenuItem onClick={openSegmentIncluded}>View all included users</MenuItem>
                   )}
                   {excluded.length > 0 && (
-                    <MenuItem onClick={openSegmentExcluded}>View all excluded values</MenuItem>
+                    <MenuItem onClick={openSegmentExcluded}>View all excluded users</MenuItem>
                   )}
                   <MenuDivider />
                   <MenuItem onClick={openSegmentDebug}>Segment debugger</MenuItem>

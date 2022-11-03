@@ -32,7 +32,7 @@ export const SegmentValuesModal = ({
       <ModalContent>
         <ModalCloseButton />
         <ModalBody>
-          <ModalHeader>Segment Included/Excluded Values</ModalHeader>
+          <ModalHeader>Segment Included/Excluded Users</ModalHeader>
           <Button rightIcon={<CopyIcon />} onClick={onClickCopy}>
             Copy to Clipboard
           </Button>
