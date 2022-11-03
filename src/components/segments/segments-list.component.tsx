@@ -1,4 +1,9 @@
-import { ChevronLeftIcon, ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  QuestionOutlineIcon,
+  SettingsIcon,
+} from '@chakra-ui/icons';
 import {
   Box,
   Center,
@@ -7,6 +12,11 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
   Spinner,
   Text,
   Tooltip,
@@ -26,6 +36,7 @@ interface SegmentsListInterface {
 export const SegmentsList = ({ loading, segments }: SegmentsListInterface) => {
   const containerBg = useColorModeValue('white', 'gray.900');
   const containerBorderColor = useColorModeValue('gray.200', 'gray.700');
+  const [includeDeleted, setIncludeDeleted] = useState<boolean>(false);
   const [filter, setFilter] = useState<string>('');
   const [debouncedFilter, setDebouncedFilter] = useState<string>('');
   const [page, setPage] = useState<number>(0);
@@ -45,7 +56,9 @@ export const SegmentsList = ({ loading, segments }: SegmentsListInterface) => {
     if (!segments?.items?.length) {
       return [];
     }
-    let filteredSegments = segments.items;
+    let filteredSegments = segments.items.filter((segment) => {
+      return segment.deleted === includeDeleted;
+    });
     const normalizedFilter = (debouncedFilter ?? '').trim().toLocaleLowerCase();
     if (normalizedFilter.length > 2) {
       filteredSegments = filteredSegments.filter((segment) => {
@@ -61,7 +74,7 @@ export const SegmentsList = ({ loading, segments }: SegmentsListInterface) => {
       });
     }
     return lodash.orderBy(filteredSegments, 'creationDate', 'desc');
-  }, [segments, debouncedFilter, page]);
+  }, [segments, debouncedFilter, page, includeDeleted]);
 
   const paginatedSegments = useMemo(() => {
     const pageStart = page * PER_PAGE;
@@ -110,27 +123,51 @@ export const SegmentsList = ({ loading, segments }: SegmentsListInterface) => {
   return (
     <Box marginTop="4">
       <HStack flex={1} justifyContent="space-between">
-        <Box minW="450" maxW="450" justifyContent={'center'} flex="1">
-          <InputGroup>
-            <Input
-              autoFocus
-              placeholder="Filter segments"
-              value={filter}
-              onChange={onChangeFilter}
-              borderColor="gray.500"
+        <HStack>
+          <Box minW="450" maxW="450" justifyContent={'center'} flex="1">
+            <InputGroup>
+              <Input
+                autoFocus
+                placeholder="Filter segments"
+                value={filter}
+                onChange={onChangeFilter}
+                borderColor="gray.500"
+              />
+              <InputRightElement
+                children={
+                  <Tooltip
+                    label="Filter by segment name, tag, or included/excluded value"
+                    fontSize="md"
+                  >
+                    <QuestionOutlineIcon />
+                  </Tooltip>
+                }
+              />
+            </InputGroup>
+          </Box>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Filter Settings"
+              icon={<SettingsIcon />}
+              marginRight="3"
             />
-            <InputRightElement
-              children={
-                <Tooltip
-                  label="Filter by segment name, tag, or included/excluded value"
-                  fontSize="md"
-                >
-                  <QuestionOutlineIcon />
-                </Tooltip>
-              }
-            />
-          </InputGroup>
-        </Box>
+            <MenuList>
+              <MenuOptionGroup
+                value={includeDeleted ? 'deleted' : 'active'}
+                title="Show only"
+                type="radio"
+              >
+                <MenuItemOption value="active" onClick={() => setIncludeDeleted(false)}>
+                  Active segments
+                </MenuItemOption>
+                <MenuItemOption value="deleted" onClick={() => setIncludeDeleted(true)}>
+                  Deleted segments
+                </MenuItemOption>
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+        </HStack>
         <HStack>
           <IconButton
             aria-label="Previous Page"
