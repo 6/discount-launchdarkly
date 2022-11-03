@@ -16,7 +16,6 @@ import { ListSegmentsResponse } from 'hooks/use-list-segments';
 import lodash from 'lodash';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SegmentListItem } from './segment-list-item.component';
-// import { DashboardFlagListItem } from './dashboard-flag-list-item.component';
 
 const PER_PAGE = 25;
 
@@ -55,7 +54,9 @@ export const SegmentsList = ({ loading, segments }: SegmentsListInterface) => {
           segment.name.toLocaleLowerCase().includes(normalizedFilter) ||
           lodash.find(segment.tags ?? [], (tag) =>
             tag.toLocaleLowerCase().includes(normalizedFilter),
-          )
+          ) ||
+          segment.included.includes(normalizedFilter) ||
+          segment.excluded.includes(normalizedFilter)
         );
       });
     }
@@ -120,7 +121,10 @@ export const SegmentsList = ({ loading, segments }: SegmentsListInterface) => {
             />
             <InputRightElement
               children={
-                <Tooltip label="Filter by segment name or tag" fontSize="md">
+                <Tooltip
+                  label="Filter by segment name, tag, or included/excluded value"
+                  fontSize="md"
+                >
                   <QuestionOutlineIcon />
                 </Tooltip>
               }
