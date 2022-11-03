@@ -1,6 +1,6 @@
 import { PageContainer } from 'components/page-container';
-import { DashboardProjectMenu } from './dashboard-project-menu.component';
-import { DashboardEnvMenu } from './dashboard-env-menu.component';
+import { ProjectMenu } from 'components/project-menu';
+import { EnvMenu } from 'components/env-menu';
 import { DashboardFlagsList } from './dashboard-flags-list.component';
 import { useListFlags } from 'hooks/use-list-flags';
 import { useLaunchDarklyConfig } from 'hooks/use-launchdarkly-config';
@@ -28,8 +28,8 @@ export const DashboardScreen = () => {
 
   return (
     <PageContainer>
-      <DashboardProjectMenu />
-      <DashboardEnvMenu />
+      <ProjectMenu />
+      <EnvMenu />
       <Menu>
         <MenuButton
           as={IconButton}

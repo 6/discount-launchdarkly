@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { ChevronLeftIcon, ChevronRightIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 import {
   Box,
   Center,
@@ -6,9 +6,11 @@ import {
   IconButton,
   Input,
   InputGroup,
+  InputRightElement,
   Spinner,
   Switch,
   Text,
+  Tooltip,
   useColorModeValue,
 } from '@chakra-ui/react';
 import { ListFlagsResponse } from 'hooks/use-list-flags';
@@ -121,6 +123,13 @@ export const DashboardFlagsList = ({
               value={filter}
               onChange={onChangeFilter}
               borderColor="gray.500"
+            />
+            <InputRightElement
+              children={
+                <Tooltip label="Filter by flag name, description, tag, or segment" fontSize="md">
+                  <QuestionOutlineIcon />
+                </Tooltip>
+              }
             />
           </InputGroup>
         </Box>

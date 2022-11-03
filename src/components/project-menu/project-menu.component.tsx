@@ -4,7 +4,7 @@ import { useLaunchDarklyConfig } from 'hooks/use-launchdarkly-config';
 import { useMemo } from 'react';
 import lodash from 'lodash';
 
-export const DashboardProjectMenu = () => {
+export const ProjectMenu = () => {
   const { projectKey, setProjectKey, projects } = useLaunchDarklyConfig();
 
   const sortedProjects = useMemo(() => {

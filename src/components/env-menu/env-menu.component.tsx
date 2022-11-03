@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import { Box, Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { useLaunchDarklyConfig } from 'hooks/use-launchdarkly-config';
 
-export const DashboardEnvMenu = () => {
+export const EnvMenu = () => {
   const { env, envs, setEnv } = useLaunchDarklyConfig();
 
   return (
