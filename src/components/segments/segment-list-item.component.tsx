@@ -16,8 +16,10 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { SegmentItem } from 'hooks/use-list-segments/types';
+import { SegmentDebugModal } from './modals';
 
 interface SegmentListItemInterface {
   segment: SegmentItem;
@@ -26,6 +28,11 @@ interface SegmentListItemInterface {
 }
 export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListItemInterface) => {
   const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const {
+    onOpen: openSegmentDebug,
+    isOpen: isOpenSegmentDebug,
+    onClose: onCloseSegmentDebug,
+  } = useDisclosure();
 
   const { creationDateFormatted, creationDateRelative } = useMemo(() => {
     const creationDateMoment = moment(segment.creationDate);
@@ -47,6 +54,11 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
       paddingBottom="3"
       paddingTop="3"
     >
+      <SegmentDebugModal
+        segment={segment}
+        isOpen={isOpenSegmentDebug}
+        onCancel={onCloseSegmentDebug}
+      />
       <Box flex={5}>
         <HStack>
           <Text fontSize="md" as="b">
@@ -91,12 +103,11 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
               Actions
             </MenuButton>
             <MenuList>
-              <MenuItem>TODO</MenuItem>
+              <MenuItem onClick={openSegmentDebug}>Segment debugger</MenuItem>
               {/* <MenuItem onClick={openUpdateFlagGlobals}>Edit settings</MenuItem>
               <MenuItem onClick={openUpdateFlagIndividualTargets}>Edit individual targets</MenuItem>
               <MenuItem onClick={openUpdateFlagDefaults}>Edit default rules</MenuItem>
               <MenuDivider />
-              <MenuItem onClick={openFlagDebug}>Flag debugger</MenuItem>
               <MenuDivider />
               {flag.archived ? (
                 <MenuItem color="red" onClick={onUnarchived}>

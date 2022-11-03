@@ -18,7 +18,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { SegmentListItem } from './segment-list-item.component';
 // import { DashboardFlagListItem } from './dashboard-flag-list-item.component';
 
-const PER_PAGE = 100;
+const PER_PAGE = 25;
 
 interface SegmentsListInterface {
   loading: boolean;
