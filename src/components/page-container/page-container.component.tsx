@@ -1,8 +1,10 @@
-import { Box, Button, Center, Container, Heading, HStack, Text, Tooltip } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Center, Container, Heading, HStack, Text, Tooltip } from '@chakra-ui/react';
 import { ColorModeToggle } from 'components/color-mode-toggle';
 import { useLaunchDarklyConfig } from 'hooks/use-launchdarkly-config';
 
 export const PageContainer = ({ children }: React.PropsWithChildren) => {
+  const navigate = useNavigate();
   const { accessToken } = useLaunchDarklyConfig();
 
   return (
@@ -18,7 +20,9 @@ export const PageContainer = ({ children }: React.PropsWithChildren) => {
         )}
       </HStack>
       <Heading paddingTop="3" fontSize="3xl" textAlign="center">
-        Discount LaunchDarkly 🤨
+        <span style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
+          Discount LaunchDarkly 🤨
+        </span>
       </Heading>
       <Center>
         <Text
