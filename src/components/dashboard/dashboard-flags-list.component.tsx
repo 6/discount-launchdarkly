@@ -56,13 +56,22 @@ export const DashboardFlagsList = ({
     let filteredFlags = flags.items;
     const normalizedFilter = (debouncedFilter ?? '').trim().toLocaleLowerCase();
     if (normalizedFilter.length > 2) {
-      filteredFlags = filteredFlags.filter(
-        (flag) =>
+      filteredFlags = filteredFlags.filter((flag) => {
+        const simpleMatch =
           flag.key.includes(normalizedFilter) ||
           flag.name.toLocaleLowerCase().includes(normalizedFilter) ||
           flag.description.toLocaleLowerCase().includes(normalizedFilter) ||
-          lodash.find(flag.tags ?? [], (tag) => tag.toLocaleLowerCase().includes(normalizedFilter)),
-      );
+          lodash.find(flag.tags ?? [], (tag) => tag.toLocaleLowerCase().includes(normalizedFilter));
+        if (simpleMatch) {
+          return simpleMatch;
+        }
+        for (const env in flag.environments) {
+          const flagEnv = flag.environments[env];
+          for (const rule of flagEnv.rules || []) {
+            return !!rule.clauses.find((clause) => clause.values.includes(normalizedFilter));
+          }
+        }
+      });
     }
     return lodash.orderBy(filteredFlags, 'creationDate', 'desc');
   }, [flags, debouncedFilter, page]);
