@@ -19,7 +19,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { SegmentItem } from 'hooks/use-list-segments/types';
-import { SegmentDebugModal } from './modals';
+import { SegmentDebugModal, SegmentValuesModal } from './modals';
 
 interface SegmentListItemInterface {
   segment: SegmentItem;
@@ -32,6 +32,16 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
     onOpen: openSegmentDebug,
     isOpen: isOpenSegmentDebug,
     onClose: onCloseSegmentDebug,
+  } = useDisclosure();
+  const {
+    onOpen: openSegmentIncluded,
+    isOpen: isOpenSegmentIncluded,
+    onClose: onCloseSegmentIncluded,
+  } = useDisclosure();
+  const {
+    onOpen: openSegmentExcluded,
+    isOpen: isOpenSegmentExcluded,
+    onClose: onCloseSegmentExcluded,
   } = useDisclosure();
 
   const { creationDateFormatted, creationDateRelative } = useMemo(() => {
@@ -46,6 +56,16 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
     navigator.clipboard.writeText(segment.key);
   }, [segment.key]);
 
+  const included = useMemo(() => {
+    return (segment.included ?? []).sort();
+  }, [segment.included]);
+
+  const excluded = useMemo(() => {
+    return (segment.excluded ?? []).sort();
+  }, [segment.excluded]);
+
+  const isEmpty = !included.length && !excluded.length;
+
   return (
     <Stack
       direction="row"
@@ -58,6 +78,16 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
         segment={segment}
         isOpen={isOpenSegmentDebug}
         onCancel={onCloseSegmentDebug}
+      />
+      <SegmentValuesModal
+        values={included}
+        isOpen={isOpenSegmentIncluded}
+        onCancel={onCloseSegmentIncluded}
+      />
+      <SegmentValuesModal
+        values={excluded}
+        isOpen={isOpenSegmentExcluded}
+        onCancel={onCloseSegmentExcluded}
       />
       <Box flex={5}>
         <HStack>
@@ -94,8 +124,46 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
         ) : (
           <></>
         )}
+        {isEmpty ? (
+          <Box marginTop="2" flex={1}>
+            Empty segment
+          </Box>
+        ) : (
+          <></>
+        )}
+        {included.length ? (
+          <Box marginTop="2" flex={1}>
+            Included ({included.length} values):
+            <Tag size="sm" marginRight="1">
+              {included[0]}
+            </Tag>
+            {included.length > 2 && (
+              <Tag size="sm" marginRight="1">
+                ...
+              </Tag>
+            )}
+            {included.length > 1 && <Tag size="sm">{included[included.length - 1]}</Tag>}
+          </Box>
+        ) : (
+          <></>
+        )}
+        {excluded.length ? (
+          <Box marginTop="2" flex={1}>
+            Excluded ({excluded.length} values):
+            <Tag size="sm" marginRight="1">
+              {excluded[0]}
+            </Tag>
+            {excluded.length > 2 && (
+              <Tag size="sm" marginRight="1">
+                ...
+              </Tag>
+            )}
+            {excluded.length > 1 && <Tag size="sm">{excluded[excluded.length - 1]}</Tag>}
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
-      <Box flex={1}></Box>
       <HStack flex={2} justifyContent="right">
         <Box paddingLeft="2">
           <Menu>
@@ -103,7 +171,20 @@ export const SegmentListItem = ({ segment, setFilter, isLastItem }: SegmentListI
               Actions
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={openSegmentDebug}>Segment debugger</MenuItem>
+              {isEmpty ? (
+                <></>
+              ) : (
+                <>
+                  {included.length > 0 && (
+                    <MenuItem onClick={openSegmentIncluded}>View all included values</MenuItem>
+                  )}
+                  {excluded.length > 0 && (
+                    <MenuItem onClick={openSegmentExcluded}>View all excluded values</MenuItem>
+                  )}
+                  <MenuDivider />
+                  <MenuItem onClick={openSegmentDebug}>Segment debugger</MenuItem>
+                </>
+              )}
               {/* <MenuItem onClick={openUpdateFlagGlobals}>Edit settings</MenuItem>
               <MenuItem onClick={openUpdateFlagIndividualTargets}>Edit individual targets</MenuItem>
               <MenuItem onClick={openUpdateFlagDefaults}>Edit default rules</MenuItem>
